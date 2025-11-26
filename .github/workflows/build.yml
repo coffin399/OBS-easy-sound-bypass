@@ -36,3 +36,15 @@ jobs:
         with:
           name: easy-sound-bypass-windows
           path: build/Release/easy-sound-bypass.dll
+
+      - name: Create or update GitHub Release (latest)
+        if: github.event_name == 'push'
+        uses: ncipollo/release-action@v1
+        with:
+          tag: latest
+          name: Easy Sound Bypass (latest)
+          artifacts: build/Release/easy-sound-bypass.dll
+          artifactContentType: application/octet-stream
+          allowUpdates: true
+          replacesArtifacts: true
+          token: ${{ secrets.GITHUB_TOKEN }}
