@@ -14,6 +14,12 @@ set(OBS_CONFIG_DIR "C:/path/to/obs-studio/build/config" CACHE PATH "OBS config d
 
 find_package(Qt6 COMPONENTS Widgets Core Gui REQUIRED)
 
+include_directories(
+    ${OBS_INCLUDE_DIR}
+    ${OBS_FRONTEND_INCLUDE_DIR}
+    ${OBS_CONFIG_DIR}
+)
+
 add_library(easy-sound-bypass MODULE
     src/cable_router.cpp
 )
