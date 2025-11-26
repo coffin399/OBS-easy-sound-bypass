@@ -11,7 +11,7 @@ set(OBS_FRONTEND_INCLUDE_DIR "C:/path/to/obs-studio/UI/obs-frontend-api" CACHE P
 set(OBS_LIB_DIR "C:/path/to/obs-studio/build/libobs" CACHE PATH "OBS lib dir")
 set(OBS_FRONTEND_LIB_DIR "C:/path/to/obs-studio/build/UI/obs-frontend-api" CACHE PATH "OBS frontend lib dir")
 
-find_package(Qt5 COMPONENTS Widgets Core Gui REQUIRED)
+find_package(Qt6 COMPONENTS Widgets Core Gui REQUIRED)
 
 add_library(easy-sound-bypass MODULE
     src/cable_router.cpp
@@ -30,9 +30,9 @@ link_directories(
 target_link_libraries(easy-sound-bypass PRIVATE
     obs
     obs-frontend-api
-    Qt5::Widgets
-    Qt5::Core
-    Qt5::Gui
+    Qt6::Widgets
+    Qt6::Core
+    Qt6::Gui
 )
 
 set_target_properties(easy-sound-bypass PROPERTIES
