@@ -45,7 +45,8 @@ jobs:
             -DOBS_INCLUDE_DIR="$OBS_SRC_ROOT/libobs" \
             -DOBS_FRONTEND_INCLUDE_DIR="$OBS_SRC_ROOT/UI/obs-frontend-api" \
             -DOBS_LIB_DIR="$OBS_SRC_ROOT/build_x64/libobs" \
-            -DOBS_FRONTEND_LIB_DIR="$OBS_SRC_ROOT/build_x64/UI/obs-frontend-api"
+            -DOBS_FRONTEND_LIB_DIR="$OBS_SRC_ROOT/build_x64/UI/obs-frontend-api" \
+            -DOBS_CONFIG_DIR="$OBS_SRC_ROOT/build_x64/config"
 
       - name: Build
         run: cmake --build build --config Release
