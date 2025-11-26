@@ -1,0 +1,38 @@
+name: build-windows
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+
+env:
+  # ここはあなたの環境に合わせて修正してください
+  OBS_INCLUDE_DIR: C:/path/to/obs-studio/libobs
+  OBS_FRONTEND_INCLUDE_DIR: C:/path/to/obs-studio/UI/obs-frontend-api
+  OBS_LIB_DIR: C:/path/to/obs-studio/build/libobs
+  OBS_FRONTEND_LIB_DIR: C:/path/to/obs-studio/build/UI/obs-frontend-api
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure CMake
+        run: >
+          cmake -S . -B build -G "Visual Studio 17 2022"
+          -DOBS_INCLUDE_DIR="${{ env.OBS_INCLUDE_DIR }}"
+          -DOBS_FRONTEND_INCLUDE_DIR="${{ env.OBS_FRONTEND_INCLUDE_DIR }}"
+          -DOBS_LIB_DIR="${{ env.OBS_LIB_DIR }}"
+          -DOBS_FRONTEND_LIB_DIR="${{ env.OBS_FRONTEND_LIB_DIR }}"
+
+      - name: Build
+        run: cmake --build build --config Release
+
+      - name: Upload plugin artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: easy-sound-bypass-windows
+          path: build/Release/easy-sound-bypass.dll
