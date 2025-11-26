@@ -6,11 +6,9 @@ on:
   pull_request:
 
 env:
-  # ここはあなたの環境に合わせて修正してください
-  OBS_INCLUDE_DIR: C:/path/to/obs-studio/libobs
-  OBS_FRONTEND_INCLUDE_DIR: C:/path/to/obs-studio/UI/obs-frontend-api
-  OBS_LIB_DIR: C:/path/to/obs-studio/build/libobs
-  OBS_FRONTEND_LIB_DIR: C:/path/to/obs-studio/build/UI/obs-frontend-api
+  # 事前に用意した OBS dev パッケージ(zip)のURL
+  # (include/lib をまとめたものを自分でホスティングしてください)
+  OBS_DEV_URL: https://example.com/obs-dev-windows.zip
 
 jobs:
   build:
@@ -20,13 +18,33 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Install Qt 6
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: 6.7.*
+          host: windows
+          target: desktop
+          arch: win64_msvc2019_64
+
+      - name: Download OBS dev package
+        shell: bash
+        run: |
+          set -e
+          mkdir -p "$RUNNER_TEMP/obs-dev"
+          echo "Downloading OBS dev package from $OBS_DEV_URL"
+          curl -L "$OBS_DEV_URL" -o obs-dev.zip
+          unzip -q obs-dev.zip -d "$RUNNER_TEMP/obs-dev"
+
       - name: Configure CMake
-        run: >
-          cmake -S . -B build -G "Visual Studio 17 2022"
-          -DOBS_INCLUDE_DIR="${{ env.OBS_INCLUDE_DIR }}"
-          -DOBS_FRONTEND_INCLUDE_DIR="${{ env.OBS_FRONTEND_INCLUDE_DIR }}"
-          -DOBS_LIB_DIR="${{ env.OBS_LIB_DIR }}"
-          -DOBS_FRONTEND_LIB_DIR="${{ env.OBS_FRONTEND_LIB_DIR }}"
+        shell: bash
+        run: |
+          set -e
+          OBS_DEV_ROOT="$RUNNER_TEMP/obs-dev/obs-dev"
+          cmake -S . -B build -G "Visual Studio 17 2022" \
+            -DOBS_INCLUDE_DIR="$OBS_DEV_ROOT/include/libobs" \
+            -DOBS_FRONTEND_INCLUDE_DIR="$OBS_DEV_ROOT/include/obs-frontend-api" \
+            -DOBS_LIB_DIR="$OBS_DEV_ROOT/lib" \
+            -DOBS_FRONTEND_LIB_DIR="$OBS_DEV_ROOT/lib"
 
       - name: Build
         run: cmake --build build --config Release
