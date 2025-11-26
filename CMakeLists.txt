@@ -7,7 +7,7 @@ set(CMAKE_AUTOMOC ON)
 
 #! OBS / Qt のパスは CMake 実行時に設定してください
 set(OBS_INCLUDE_DIR "C:/path/to/obs-studio/libobs" CACHE PATH "OBS libobs include dir")
-set(OBS_FRONTEND_INCLUDE_DIR "C:/path/to/obs-studio/UI/obs-frontend-api" CACHE PATH "OBS frontend api include dir")
+set(OBS_FRONTEND_INCLUDE_DIR "C:/path/to/obs-studio/UI" CACHE PATH "OBS frontend api include dir")
 set(OBS_LIB_DIR "C:/path/to/obs-studio/build/libobs" CACHE PATH "OBS lib dir")
 set(OBS_FRONTEND_LIB_DIR "C:/path/to/obs-studio/build/UI/obs-frontend-api" CACHE PATH "OBS frontend lib dir")
 set(OBS_CONFIG_DIR "C:/path/to/obs-studio/build/config" CACHE PATH "OBS config dir (for obsconfig.h)")
