@@ -112,7 +112,6 @@ void obs_module_unload(void)
 {
     if (g_dialog) {
         g_dialog->close();
-        delete g_dialog;
         g_dialog = nullptr;
     }
 }
@@ -122,6 +121,9 @@ static void open_dialog(void *)
     if (!g_dialog) {
         QWidget *parent = static_cast<QWidget *>(obs_frontend_get_main_window());
         g_dialog = new CableRouterDialog(parent);
+        QObject::connect(g_dialog, &QObject::destroyed, []() {
+            g_dialog = nullptr;
+        });
     }
 
     g_dialog->show();
