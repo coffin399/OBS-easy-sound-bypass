@@ -4,18 +4,11 @@
 
 message(STATUS "Using override FindLibAJANTV2.cmake from plugin repository")
 
-# Fake include root for AJA libraries
+# Fake include root for AJA libraries. For the stub we only point at the
+# overrides directory itself and do not try to reference any subdirectories,
+# to avoid CMake errors about non-existent include paths.
 set(AJA_LIBRARIES_INCLUDE_DIR "${CMAKE_CURRENT_LIST_DIR}")
-set(AJA_LIBRARIES_INCLUDE_DIRS
-  "${AJA_LIBRARIES_INCLUDE_DIR}"
-  "${AJA_LIBRARIES_INCLUDE_DIR}/ajaanc"
-  "${AJA_LIBRARIES_INCLUDE_DIR}/ajabase"
-  "${AJA_LIBRARIES_INCLUDE_DIR}/ajantv2"
-  "${AJA_LIBRARIES_INCLUDE_DIR}/ajantv2/includes"
-)
-
-# On Windows OBS 30.2.3's real module also appends a platform-specific src dir;
-# for the stub we don't need that, but it is harmless to keep only the base dirs.
+set(AJA_LIBRARIES_INCLUDE_DIRS "${AJA_LIBRARIES_INCLUDE_DIR}")
 set(LIBAJANTV2_INCLUDE_DIRS "${AJA_LIBRARIES_INCLUDE_DIRS}")
 
 # Fake library names
