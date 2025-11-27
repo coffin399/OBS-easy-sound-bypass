@@ -27,8 +27,9 @@ jobs:
           set -e
           git clone --branch 30.2.3 --depth 1 --recursive https://github.com/obsproject/obs-studio.git
           cd obs-studio
+          OVERRIDE_DIR="${GITHUB_WORKSPACE//\\//}/cmake/Overrides"
           cmake -S . -B build_x64 -G "Visual Studio 17 2022" -A x64 -DCMAKE_SYSTEM_VERSION=10.0 \
-            -DCMAKE_MODULE_PATH="${GITHUB_WORKSPACE}/cmake/Overrides"
+            -DCMAKE_MODULE_PATH="${OVERRIDE_DIR}"
 
       - name: Build obs-studio (libobs, frontend)
         shell: bash
