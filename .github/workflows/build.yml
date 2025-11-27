@@ -32,7 +32,8 @@ jobs:
             -DCMAKE_MODULE_PATH="${OVERRIDE_DIR}" \
             -DENABLE_SCRIPTING=OFF \
             -DENABLE_NEW_MPEGTS_OUTPUT=OFF \
-            -Dnlohmann_json_DIR="${OVERRIDE_DIR}"
+            -Dnlohmann_json_DIR="${OVERRIDE_DIR}" \
+            -DLibDataChannel_DIR="${OVERRIDE_DIR}"
 
       - name: Build obs-studio (libobs, frontend)
         shell: bash
