@@ -88,11 +88,21 @@ jobs:
       - name: Build
         run: cmake --build build --config Release
 
-      - name: Upload plugin artifact
+      - name: Install Inno Setup
+        shell: powershell
+        run: |
+          choco install innosetup -y
+
+      - name: Build installer
+        shell: powershell
+        run: |
+          & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer\easy-sound-bypass.iss
+
+      - name: Upload installer artifact
         uses: actions/upload-artifact@v4
         with:
           name: easy-sound-bypass-windows
-          path: build/Release/easy-sound-bypass.dll
+          path: installer/Output/easy-sound-bypass-setup.exe
 
       - name: Create or update GitHub Release (latest)
         if: github.event_name == 'push'
@@ -100,7 +110,7 @@ jobs:
         with:
           tag: latest
           name: Easy Sound Bypass (latest)
-          artifacts: build/Release/easy-sound-bypass.dll
+          artifacts: installer/Output/easy-sound-bypass-setup.exe
           artifactContentType: application/octet-stream
           allowUpdates: true
           replacesArtifacts: true
