@@ -20,6 +20,26 @@ include_directories(
     ${OBS_CONFIG_DIR}
 )
 
+find_library(LIBOBS_LIB
+    NAMES obs libobs
+    PATHS ${OBS_LIB_DIR}
+    NO_DEFAULT_PATH
+)
+
+find_library(OBS_FRONTEND_LIB
+    NAMES obs-frontend-api libobs-frontend-api
+    PATHS ${OBS_FRONTEND_LIB_DIR}
+    NO_DEFAULT_PATH
+)
+
+if(NOT LIBOBS_LIB)
+    message(FATAL_ERROR "libobs library not found in OBS_LIB_DIR: ${OBS_LIB_DIR}")
+endif()
+
+if(NOT OBS_FRONTEND_LIB)
+    message(FATAL_ERROR "obs-frontend-api library not found in OBS_FRONTEND_LIB_DIR: ${OBS_FRONTEND_LIB_DIR}")
+endif()
+
 add_library(easy-sound-bypass MODULE
     src/cable_router.cpp
 )
@@ -36,8 +56,8 @@ link_directories(
 )
 
 target_link_libraries(easy-sound-bypass PRIVATE
-    obs
-    obs-frontend-api
+    ${LIBOBS_LIB}
+    ${OBS_FRONTEND_LIB}
     Qt6::Widgets
     Qt6::Core
     Qt6::Gui
