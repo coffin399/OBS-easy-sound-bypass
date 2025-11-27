@@ -151,8 +151,6 @@ static bool enum_audio_sources(void *data, obs_source_t *src)
         if (name)
             combo->addItem(QString::fromUtf8(name));
     }
-
-    obs_source_release(src);
     return true;
 }
 
