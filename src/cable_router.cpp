@@ -15,6 +15,7 @@ OBS_MODULE_USE_DEFAULT_LOCALE("easy-sound-bypass", "en-US");
 
 static void open_dialog(void *data);
 static bool enum_monitoring_devices(void *data, const char *name, const char *id);
+static bool enum_audio_sources(void *data, obs_source_t *src);
 
 class CableRouterDialog : public QDialog {
 public:
@@ -67,8 +68,10 @@ private:
             QVariant deviceIdVar = deviceCombo->itemData(deviceIndex);
             QString deviceId = deviceIdVar.toString();
             if (!deviceId.isEmpty()) {
+                QString deviceName = deviceCombo->itemText(deviceIndex);
+                QByteArray nameUtf8 = deviceName.toUtf8();
                 QByteArray idUtf8 = deviceId.toUtf8();
-                obs_set_audio_monitoring_device(idUtf8.constData());
+                obs_set_audio_monitoring_device(nameUtf8.constData(), idUtf8.constData());
             }
         }
 
@@ -83,20 +86,11 @@ private:
 
     void populateSources()
     {
-        obs_source_t **sources = nullptr;
-        size_t count = 0;
-        obs_enum_sources(&sources, &count);
+        if (!sourceCombo)
+            return;
 
-        for (size_t i = 0; i < count; ++i) {
-            obs_source_t *src = sources[i];
-            uint32_t flags = obs_source_get_output_flags(src);
-            if (flags & OBS_SOURCE_AUDIO) {
-                const char *name = obs_source_get_name(src);
-                sourceCombo->addItem(QString::fromUtf8(name));
-            }
-        }
-
-        bfree(sources);
+        sourceCombo->clear();
+        obs_enum_sources(enum_audio_sources, sourceCombo);
     }
 
     void populateDevices();
@@ -142,6 +136,23 @@ static bool enum_monitoring_devices(void *data, const char *name, const char *id
         return false;
 
     combo->addItem(QString::fromUtf8(name), QString::fromUtf8(id));
+    return true;
+}
+
+static bool enum_audio_sources(void *data, obs_source_t *src)
+{
+    QComboBox *combo = static_cast<QComboBox *>(data);
+    if (!combo || !src)
+        return false;
+
+    uint32_t flags = obs_source_get_output_flags(src);
+    if (flags & OBS_SOURCE_AUDIO) {
+        const char *name = obs_source_get_name(src);
+        if (name)
+            combo->addItem(QString::fromUtf8(name));
+    }
+
+    obs_source_release(src);
     return true;
 }
 
