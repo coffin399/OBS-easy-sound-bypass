@@ -43,11 +43,11 @@ jobs:
           OBS_SRC_ROOT="${GITHUB_WORKSPACE}/obs-studio"
           cmake -S . -B build -G "Visual Studio 17 2022" \
             -DOBS_INCLUDE_DIR="$OBS_SRC_ROOT/libobs" \
-            -DOBS_FRONTEND_INCLUDE_DIR="$OBS_SRC_ROOT/UI" \
+            -DOBS_FRONTEND_INCLUDE_DIR="$OBS_SRC_ROOT/UI/obs-frontend-api" \
             -DOBS_LIB_DIR="$OBS_SRC_ROOT/build_x64/libobs" \
             -DOBS_FRONTEND_LIB_DIR="$OBS_SRC_ROOT/build_x64/UI/obs-frontend-api" \
             -DOBS_CONFIG_DIR="$OBS_SRC_ROOT/build_x64/config" \
-            -DCMAKE_CXX_FLAGS="/I$OBS_SRC_ROOT/libobs /I$OBS_SRC_ROOT/UI /I$OBS_SRC_ROOT/build_x64/config"
+            -DCMAKE_CXX_FLAGS="/I$OBS_SRC_ROOT/libobs /I$OBS_SRC_ROOT/UI/obs-frontend-api /I$OBS_SRC_ROOT/build_x64/config"
 
       - name: Build
         run: cmake --build build --config Release
