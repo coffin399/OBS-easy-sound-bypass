@@ -46,6 +46,7 @@ jobs:
             -DCMAKE_PREFIX_PATH="${DEPS_DIR};${DEPS_DIR}/bin" \
             -DENABLE_SCRIPTING=OFF \
             -DENABLE_NEW_MPEGTS_OUTPUT=OFF \
+            -DENABLE_WEBSOCKET=OFF \
             -DENABLE_AJA=OFF
 
       - name: Build obs-studio (libobs, frontend)
