@@ -36,6 +36,13 @@ jobs:
           cd obs-studio
           cmake --build build_x64 --config Release
 
+      - name: Copy obs-frontend-api header into plugin source
+        shell: bash
+        run: |
+          set -e
+          OBS_SRC_ROOT="${GITHUB_WORKSPACE}/obs-studio"
+          cp "$OBS_SRC_ROOT/UI/obs-frontend-api/obs-frontend-api.h" "${GITHUB_WORKSPACE}/src/obs-frontend-api.h"
+
       - name: Configure plugin CMake
         shell: bash
         run: |
