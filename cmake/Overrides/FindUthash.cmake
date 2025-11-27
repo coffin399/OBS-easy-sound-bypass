@@ -9,7 +9,14 @@ set(Uthash_FOUND TRUE)
 set(Uthash_VERSION "2.0.0")
 
 # Variables expected by OBS' FindUthash.cmake
-set(Uthash_INCLUDE_DIR "")
-set(Uthash_INCLUDE_DIRS "")
+set(Uthash_INCLUDE_DIR "${CMAKE_CURRENT_LIST_DIR}")
+set(Uthash_INCLUDE_DIRS "${Uthash_INCLUDE_DIR}")
 
-# No library to link (uthash is header-only), so nothing else needed.
+# Provide an imported interface target so that target_link_libraries can
+# safely reference Uthash::Uthash.
+if(NOT TARGET Uthash::Uthash)
+  add_library(Uthash::Uthash INTERFACE IMPORTED)
+  set_target_properties(Uthash::Uthash PROPERTIES
+    INTERFACE_INCLUDE_DIRECTORIES "${Uthash_INCLUDE_DIRS}"
+  )
+endif()

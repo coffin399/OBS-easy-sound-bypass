@@ -17,9 +17,9 @@ set(FFMPEG_AVFORMAT_LIBRARIES "")
 set(FFMPEG_AVUTIL_LIBRARIES "")
 
 # Also create interface targets with the expected names so that
-# target_link_libraries(... avcodec avdevice avutil avformat) and
-# target_link_libraries(... FFmpeg::avcodec ...) do not fail.
-foreach(_fflib avcodec avdevice avutil avformat swscale swresample)
+# target_link_libraries(... avcodec avdevice avutil avformat avfilter ...)
+# and target_link_libraries(... FFmpeg::avcodec ...) do not fail.
+foreach(_fflib avcodec avdevice avutil avformat avfilter avresample postproc swscale swresample)
   if(NOT TARGET ${_fflib})
     add_library(${_fflib} INTERFACE IMPORTED)
   endif()
