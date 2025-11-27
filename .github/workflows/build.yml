@@ -21,6 +21,19 @@ jobs:
           target: desktop
           arch: win64_msvc2019_64
 
+      - name: Download obs-deps (Windows x64)
+        shell: bash
+        run: |
+          set -e
+          DEPS_TAG="2025-03-06"
+          DEPS_ARCHIVE="windows-deps-${DEPS_TAG}-x64.zip"
+          DEPS_URL="https://github.com/obsproject/obs-deps/releases/download/${DEPS_TAG}/${DEPS_ARCHIVE}"
+          DEPS_DIR="${GITHUB_WORKSPACE}/obs-deps"
+          mkdir -p "${DEPS_DIR}"
+          curl -L "${DEPS_URL}" -o deps.zip
+          unzip -q deps.zip -d "${DEPS_DIR}"
+          rm deps.zip
+
       - name: Clone and configure obs-studio
         shell: bash
         run: |
@@ -28,18 +41,12 @@ jobs:
           git clone --branch 30.2.3 --depth 1 --recursive https://github.com/obsproject/obs-studio.git
           cd obs-studio
           OVERRIDE_DIR="${GITHUB_WORKSPACE//\\//}/cmake/Overrides"
-          # Ensure a dummy obs-websocket export header exists so that
-          # export_target()'s target_sources() call does not fail even
-          # if generate_export_header does not run as expected.
-          mkdir -p build_x64/plugins/obs-websocket
-          touch build_x64/plugins/obs-websocket/obs-websocket-api_EXPORT.h
+          DEPS_DIR="${GITHUB_WORKSPACE//\\//}/obs-deps"
           cmake -S . -B build_x64 -G "Visual Studio 17 2022" -A x64 -DCMAKE_SYSTEM_VERSION=10.0 \
-            -DCMAKE_MODULE_PATH="${OVERRIDE_DIR}" \
+            -DCMAKE_PREFIX_PATH="${DEPS_DIR};${DEPS_DIR}/bin" \
             -DENABLE_SCRIPTING=OFF \
             -DENABLE_NEW_MPEGTS_OUTPUT=OFF \
-            -DENABLE_AJA=OFF \
-            -Dnlohmann_json_DIR="${OVERRIDE_DIR}" \
-            -DLibDataChannel_DIR="${OVERRIDE_DIR}"
+            -DENABLE_AJA=OFF
 
       - name: Build obs-studio (libobs, frontend)
         shell: bash
